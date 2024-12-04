@@ -1,22 +1,42 @@
+import React from 'react';
 import './App.css';
-import useForm from './Hooks/useForm';
+
 function App() {
-       const {handleChange,values,errors}=useForm();
-       console.log(values);
-       console.log(errors);
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    fetch("http://localhost:8080/User_Manage/login?uname="+data.get("uname")+"&pwd="+data.get("pwd"), { crossDomain: true })
+      .then((resp) => resp.json())
+      .then((data) => {
+        if (data.status === "success") {
+          alert("Login Success");
+        } else {
+          alert("Login Failed");
+        }
+      })
+
+  }
+
   return (
-    <div className="App">
-      <form>
-<input type='Email' name='email' placeholder='email'onChange={handleChange}></input><br/>
-<input type='passwrod' name='password' placeholder='passwrd' onChange={handleChange}></input><br/>
-{errors.password &&<h3>{errors.password}</h3>}
-<input type='text' name='username' placeholder='username' onChange={handleChange}></input><br/>
-{errors.username &&<h3>{errors.username}</h3>}
-<input type='Submit' className='submit'></input>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <div className='form-group'>
+            <label>Username</label>
+            <input name='uname' type="text" className='form-control' placeholder='Enter Username'></input>
+          </div>
+
+          <div className='form-group'>
+            <label>Password</label>
+            <input name='pwd' type="password" className='form-control' placeholder='Enter Password'></input>
+          </div>
+
+          <button type='submit'>Submit</button>
+        </div>
       </form>
     </div>
   );
 }
 
 export default App;
-
